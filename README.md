@@ -1,0 +1,6 @@
+- [ ] Install dependencies: `npm i`
+- [ ] Run locally: `npm run start` (to preview on http://localhost:8787)
+- [ ] Check Partytown lib can be proxied: `/api/partytown/lib/partytown.js`
+- [ ] Check resolved urls can be proxied: `/api/partytown/proxy?url=https%3A%2F%2Fwww.google-analytics.com%2Fanalytics.js`
+- [ ] npm run deploy (to deploy to Cloudflare at: `https://cloudflare-worker-partytown-shopify-app-proxy.{your cloudflare account name}.workers.dev)`
+- [ ] Party! 🎉

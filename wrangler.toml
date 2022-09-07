@@ -1,0 +1,3 @@
+name = "cloudflare-worker-partytown-shopify-app-proxy"
+main = "src/index.js"
+compatibility_date = "2022-09-05"
