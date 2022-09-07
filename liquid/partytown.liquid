@@ -1,0 +1,86 @@
+{% comment %} Settings {% endcomment %}
+{%- liquid
+  comment
+    Toggle Partytown on or off: true|false
+    Scripts will be set appropriately either way
+    See: https://partytown.builder.io/partytown-scripts
+  endcomment
+  assign partytown_use_partytown = true
+  comment
+    Toggle Partytown debug mode on or off: true|false
+    Set to `true` for testing, then set to `false` for best performance
+    See: https://partytown.builder.io/debugging
+  endcomment
+  assign partytown_use_debug_mode = true
+  comment
+    Adjust the "Subpath prefix" and "Subpath" to match your App Proxy settings
+    See: https://shopify.dev/apps/online-store/app-proxies
+    Note: You will need to setup a Cloudflare Worker or similar to handle proxying the Partytown libs and resolved urls
+    See: https://github.com/edlaver/cloudflare-worker-partytown-shopify-app-proxy for an example one.
+  endcomment
+  assign partytown_app_proxy_subpath_prefix = 'apps'
+  assign partytown_app_proxy_subpath = 'partytown'
+  comment
+    Add your various analytics settings here:
+  endcomment
+  assign partytown_google_analytics_id = 'UA-237191759-1'
+-%}
+{% comment %} Concat the "Subpath prefix" and "Subpath" settings {% endcomment %}
+{%- capture partytown_app_proxy_base -%}
+  /{{ partytown_app_proxy_subpath_prefix }}/{{ partytown_app_proxy_subpath -}}
+{%- endcapture -%}
+{% comment %} Set the appropriate "script" type based on Partytown being enabled/disabled... {% endcomment %}
+{%- capture partytown_script_type -%}
+  {%- if partytown_use_partytown -%}
+    text/partytown
+  {%- else -%}
+    text/javascript
+  {%- endif -%}
+{%- endcapture -%}
+{% comment %} End: Settings {% endcomment %}
+
+{%- if partytown_use_partytown -%}
+  {% comment %} Configure Partytown. See: https://partytown.builder.io/configuration {% endcomment %}
+  <script>
+    partytown = {
+      debug: {{ partytown_use_debug_mode }},
+      lib: '{{ partytown_app_proxy_base }}/lib/', // Uses app proxy to map to: e.g. /api/partytown/lib route.
+      forward: [
+          'dataLayer.push' // Google Tag Manager.
+      ],
+      resolveUrl: function (url, location, type) {
+          // console.log('partytown:resolveUrl, url, location, type:', url.href, location.href, type);
+          if (type === 'script') {
+            // Uses app proxy to map to: e.g. /api/partytown/proxy route.
+            var proxyUrl = new URL('{{ partytown_app_proxy_base }}/proxy', location.href);
+            proxyUrl.searchParams.append('url', url.href);
+            //  console.log('partytown:resolveUrl, proxyUrl:', proxyUrl.href);
+            return proxyUrl;
+          }
+          return url;
+        },
+    };
+  </script>
+  <script>
+    /* Partytown 0.7.0 - MIT builder.io */
+    !function(t,e,n,i,r,o,a,d,s,c,p,l){function u(){l||(l=1,"/"==(a=(o.lib||"/~partytown/")+(o.debug?"debug/":""))[0]&&(s=e.querySelectorAll('script[type="text/partytown"]'),i!=t?i.dispatchEvent(new CustomEvent("pt1",{detail:t})):(d=setTimeout(w,1e4),e.addEventListener("pt0",f),r?h(1):n.serviceWorker?n.serviceWorker.register(a+(o.swPath||"partytown-sw.js"),{scope:a}).then((function(t){t.active?h():t.installing&&t.installing.addEventListener("statechange",(function(t){"activated"==t.target.state&&h()}))}),console.error):w())))}function h(t){c=e.createElement(t?"script":"iframe"),t||(c.setAttribute("style","display:block;width:0;height:0;border:0;visibility:hidden"),c.setAttribute("aria-hidden",!0)),c.src=a+"partytown-"+(t?"atomics.js?v=0.7.0":"sandbox-sw.html?"+Date.now()),e.body.appendChild(c)}function w(t,n){for(f(),t=0;t<s.length;t++)(n=e.createElement("script")).innerHTML=s[t].innerHTML,e.head.appendChild(n);c&&c.parentNode.removeChild(c)}function f(){clearTimeout(d)}o=t.partytown||{},i==t&&(o.forward||[]).map((function(e){p=t,e.split(".").map((function(e,n,i){p=p[i[n]]=n+1<i.length?"push"==i[n+1]?[]:p[i[n]]||{}:function(){(t._ptf=t._ptf||[]).push(i,arguments)}}))})),"complete"==e.readyState?u():(t.addEventListener("DOMContentLoaded",u),t.addEventListener("load",u))}(window,document,navigator,top,window.crossOriginIsolated);
+  </script>
+{%- endif %}
+
+{%- comment %} Google Analytics tag section: {%- endcomment %}
+{%- comment %}theme-check-disable{%- endcomment %}
+<script
+  type="{{ partytown_script_type }}"
+  src="https://www.googletagmanager.com/gtag/js?id={{- partytown_google_analytics_id -}}"
+>
+</script>
+{%- comment %}theme-check-enable{%- endcomment %}
+<script type="{{ partytown_script_type }}">
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '{{- partytown_google_analytics_id -}}');
+</script>
+{%- comment %} End: Google Analytics tag section {%- endcomment %}
+
+{%- comment %} Add other scripts here as needed {%- endcomment %}
