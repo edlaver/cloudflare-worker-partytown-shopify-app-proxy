@@ -1,4 +1,5 @@
-{% comment %} Settings {% endcomment %}
+{%- comment %} Start: Partytown {%- endcomment %}
+{%- comment %} Settings {%- endcomment %}
 {%- liquid
   comment
     Toggle Partytown on or off: true|false
@@ -25,11 +26,11 @@
   endcomment
   assign partytown_google_analytics_id = 'UA-237191759-1'
 -%}
-{% comment %} Concat the "Subpath prefix" and "Subpath" settings {% endcomment %}
+{%- comment %} Concat the "Subpath prefix" and "Subpath" settings {%- endcomment %}
 {%- capture partytown_app_proxy_base -%}
   /{{ partytown_app_proxy_subpath_prefix }}/{{ partytown_app_proxy_subpath -}}
 {%- endcapture -%}
-{% comment %} Set the appropriate "script" type based on Partytown being enabled/disabled... {% endcomment %}
+{%- comment %} Set the appropriate "script" type based on Partytown being enabled/disabled... {%- endcomment %}
 {%- capture partytown_script_type -%}
   {%- if partytown_use_partytown -%}
     text/partytown
@@ -37,10 +38,10 @@
     text/javascript
   {%- endif -%}
 {%- endcapture -%}
-{% comment %} End: Settings {% endcomment %}
+{%- comment %} End: Settings {%- endcomment %}
 
 {%- if partytown_use_partytown -%}
-  {% comment %} Configure Partytown. See: https://partytown.builder.io/configuration {% endcomment %}
+  {%- comment %} Configure Partytown. See: https://partytown.builder.io/configuration {%- endcomment %}
   <script>
     partytown = {
       debug: {{ partytown_use_debug_mode }},
@@ -72,6 +73,9 @@
 <script
   type="{{ partytown_script_type }}"
   src="https://www.googletagmanager.com/gtag/js?id={{- partytown_google_analytics_id -}}"
+  {% unless partytown_use_partytown -%}
+    async
+  {%- endunless %}
 >
 </script>
 {%- comment %}theme-check-enable{%- endcomment %}
@@ -84,3 +88,5 @@
 {%- comment %} End: Google Analytics tag section {%- endcomment %}
 
 {%- comment %} Add other scripts here as needed {%- endcomment %}
+
+{%- comment %} End: Partytown {%- endcomment %}
