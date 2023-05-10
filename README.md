@@ -1,10 +1,12 @@
+> See: https://bit.ly/partysh0p for the why and how.
+
 - [ ] Install dependencies: `npm i`
 - [ ] Run locally: `npm run start` (to preview on http://localhost:8787)
 - [ ] Check Partytown libs can be proxied: `http://localhost:8787/api/partytown/lib/partytown.js`
 - [ ] Check resolved urls can be proxied: `http://localhost:8787/api/partytown/proxy?url=https%3A%2F%2Fwww.google-analytics.com%2Fanalytics.js`
 - [ ] Deploy to Cloudflare: `npm run deploy` e.g. `https://cloudflare-worker-partytown-shopify-app-proxy.{your cloudflare account name}.workers.dev`
 - [ ] Set the Proxy URL setting in your App > App setup > App Proxy to: `https://cloudflare-worker-partytown-shopify-app-proxy.{your cloudflare account name}.workers.dev/api/partytown/`  
-      ![App proxy setup screenshot](/assets/app-proxy-setup.png)
+       ![App proxy setup screenshot](/assets/app-proxy-setup.png)
   - See: https://shopify.dev/apps/online-store/app-proxies
 - [ ] Copy the contents of `./liquid/partytown.liquid` into your `theme.liquid` file, before the closing `</head>` tag, and configure to meet your needs.
 - [ ] Save changes to `theme.liquid`
