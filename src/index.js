@@ -24,7 +24,8 @@ router.routes.push([
     async (req) => {
       const version = "@0.7.0"; // Specific Partytown version (pinned)
       // const version = ""; // Can also use latest version (unpinned)
-      const url = `https://unpkg.com/@builder.io/partytown${version}/lib/${req.params.splat}`;
+      // const url = `https://unpkg.com/@builder.io/partytown${version}/lib/${req.params.splat}`;
+      const url = `https://cdn.jsdelivr.net/npm/@builder.io/partytown${version}/lib/${req.params.splat}`;
       return await fetch(url);
     },
   ],
